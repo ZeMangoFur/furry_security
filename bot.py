@@ -49,9 +49,9 @@ client.remove_command('help')
 
 client.remove_command('lovetest')
 
-with open('./furry_security/statements.txt', 'r+') as file:
+with open('statements.txt', 'r+') as file:
     statements = json.load(file)
-with open('./furry_security/responses.txt', 'r+') as file:
+with open('responses.txt', 'r+') as file:
     responses = json.load(file)
 current_statement = statements[random.randint(0, len(statements)-1)]
 
@@ -507,9 +507,9 @@ async def chat(message, *, args):
         await message.channel.send(current_statement)
     jstatements = json.dumps(statements)
     jresponses = json.dumps(responses)
-    with open('./furry_security/statements.txt', 'w+') as file:
+    with open('statements.txt', 'w+') as file:
         file.write(jstatements)
-    with open('./furry_security/responses.txt', 'w+') as file:
+    with open('responses.txt', 'w+') as file:
         file.write(jresponses)
 
 #----------------------------------------------------CHAT BOT END------------------------------------------------------
