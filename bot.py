@@ -54,8 +54,6 @@ with open('statements.txt', 'r+') as file:
 with open('responses.txt', 'r+') as file:
     responses = json.load(file)
 current_statement = statements[random.randint(0, len(statements)-1)]
-
-token = ""
 #--------------------------------------------------------------Furry Security bot---------------------------------------------------------------------------
 
 
@@ -990,4 +988,4 @@ async def unban(ctx, *, member):
             await ctx.send(f'Unbanned {user.name}#{user.discriminator}')
             return
 
-client.run(token)
+client.run(os.getenv(FurSec))
