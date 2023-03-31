@@ -2,15 +2,10 @@ import discord
 import os
 import random
 import asyncio
-import praw
-import asyncpraw
 import time
 import randfacts
-import pafy
-import pytube
 import json
 import glob
-import imgur_python
 import dataIO
 import requests
 import discord_interactions
@@ -26,15 +21,13 @@ from aiohttp import request
 from aiohttp import BasicAuth
 from discord.ext.commands import MinimalHelpCommand
 #------------------------------------------------
-from six21 import e621
 from dotenv import load_dotenv
 from youtube_dl import YoutubeDL
 from time import sleep
 from os import path
-from imgur_python import Imgur
-from notes import help, note, examples, ratings
 
-os.chdir("C:\\Users\\justi\\Desktop\\Lel\\Furry Security")
+
+os.chdir("/home/Guest/FurSec/furry_security")
 
 
 mainshop = [{"name":"Old_PC","price":500,"description":"This PC sucks but you can play old games on it and get a feeling of nostalgia"},
@@ -59,6 +52,12 @@ client = commands.Bot(command_prefix=['fs! ','fs!'], intents=Intents.all())
 client.remove_command('help')
 
 client.remove_command('lovetest')
+
+with open('./furry_security/statements.txt', 'r+') as file:
+    statements = json.load(file)
+with open('./furry_security/responses.txt', 'r+') as file:
+    responses = json.load(file)
+current_statement = statements[random.randint(0, len(statements)-1)]
 
 token = ""
 #--------------------------------------------------------------Furry Security bot---------------------------------------------------------------------------
@@ -476,6 +475,48 @@ async def buy_this(user,item_name,amount):
     return [True,"Worked"]
 
 #----------------------------------------------------ECONOMY SYSTEM END------------------------------------------------------
+
+#--------------------------------------------------------CHAT BOT----------------------------------------------------------------
+
+# pulled from https://github.com/DiskKun/hello-bot/blob/master/discord-version/main.py on 31.03.2023
+
+@client.command()
+async def chat(message, *, args):
+    global current_statement
+    randomAssStringValue = "".join(args)
+    randomAssStringValue = randomAssStringValue.strip()
+    
+
+    ## BOT CODE
+    print(args)
+    print(randomAssStringValue)
+    usrinput = randomAssStringValue.lower()
+    is_in_s = usrinput in statements
+    if is_in_s == True:
+        if usrinput in responses.keys():
+            value = random.choice(responses[usrinput])
+            await message.channel.send(value)
+            current_statement = value
+        else:
+            current_statement = statements[random.randint(0, len(statements)-1)]
+            await message.channel.send(current_statement)
+    else:
+        statements.append(usrinput)
+        responses.setdefault(current_statement, [])
+        if usrinput in responses[current_statement]:
+            pass
+        else:
+            responses[current_statement].append(usrinput)
+        current_statement = statements[random.randint(0, len(statements)-1)]
+        await message.channel.send(current_statement)
+    jstatements = json.dumps(statements)
+    jresponses = json.dumps(responses)
+    with open('./furry_security/statements.txt', 'w+') as file:
+        file.write(jstatements)
+    with open('./furry_security/responses.txt', 'w+') as file:
+        file.write(jresponses)
+
+#----------------------------------------------------CHAT BOT END------------------------------------------------------
 
 @client.command()
 @commands.has_permissions(kick_members=True)
