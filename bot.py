@@ -40,10 +40,6 @@ mainshop = [{"name":"Old_PC","price":500,"description":"This PC sucks but you ca
 
 intents = discord.Intents.all()
 
-reddit = praw.Reddit(client_id='s-PoBApuWL-Rmg',
-                     client_secret='IonsVCxPhoB7lxmuMOlUXv0oo0KEuw',
-                     user_agent='furry_irl')
-
 intents.members = False
 
 load_dotenv()
